@@ -19,7 +19,7 @@ of various stations across multiple cities in India.(This data has been made
 publicly available by the Central Pollution Control Board)
 2. Dataset preprocessing/cleaning(maximising its information content) + Data
 Visualization using Seaborn/Matplotlib
-3. Training various time series ML Models [like Arima, Sarimax, etc.]
+3. Using time series forecasting methods to predict AQI at any given time using models like Arima, Sarimax, etc.
 4. Selecting the model with highest accuracy + Displaying predicted daily AQIs
 5. Deploying the project on web using Django
 
