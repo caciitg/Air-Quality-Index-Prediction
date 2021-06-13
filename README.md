@@ -1,1 +1,1 @@
-# Air-Quality-Index-Prediction
+![screenshot](aqi_ss.png)
