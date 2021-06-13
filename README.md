@@ -19,10 +19,19 @@ of various stations across multiple cities in India.(This data has been made
 publicly available by the Central Pollution Control Board)
 2. Dataset preprocessing/cleaning(maximising its information content) + Data
 Visualization using Seaborn/Matplotlib
-3. Using time series forecasting methods to predict AQI at any given time using models like Arima, Sarimax, etc.
-4. Selecting the model with highest accuracy + Displaying predicted daily AQIs
-5. Deploying the project on web using Django
-
+3. Used time series forecasting methods to predict AQI at any given time using models like Arima, Sarimax, etc.
+4. For each day, we collect the original data from getambee.com's API, which gets added to the training dataset. We predict AQi for the next 7 days.
+5. If someone searches for the AQI at a date that's before than or equal to the current date, they will get the information from the original dataset. However, if they want the index for some point in the future, the predicted AQI will be displayed.
+6. A cron job runs that scrapes the data, updates the database daily and runs the ML function.
+7. To save the data, we run shell commands from python script.
+8. Deployed the project on web using Django
+9. Created a REST api for the project such that 3rd party users can access the predicted AQI at any date using https://localhost:8000/?Date=
 
 ![screenshot](aqi_ss.png)
 
+## Team Members:
+1. Tanishka Gaur
+2. Vedant Chourasia
+3. Shriya Dixit
+4. Pranjali Verma
+5. Shrish Kumar Singhal
