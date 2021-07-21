@@ -27,13 +27,14 @@ SECRET_KEY = 'b$90yfyi@^b(&u^nucgtbcb2p9pm1&q)=r(t(o9-*=e%7&$w(9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["delhi-aqi-pred.herokuapp.com","localhost","0.0.0.0","127.0.0.1"]
+ALLOWED_HOSTS = ["delhi-aqi-pred.herokuapp.com","localhost","10.0.2.2","127.0.0.1",'*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     # 'background_tasks',
+    'rest_framework',
     'django_crontab',
     # 'livesync',
     'main',
@@ -45,12 +46,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'import_export',
+    'django_filters',
+    'corsheaders',
 
 ]
 
 # CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -93,6 +97,15 @@ DATABASES = {
     }
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -143,6 +156,7 @@ STATICFILES_DIRS = [
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 CRONJOBS = [
-    # ('*/5 * * * *', 'main.cron.my_scheduled_job')
+    # ('*/2 * * * *', 'main.cron.my_scheduled_job')
     # ('0 2 * * *', 'main.cron.my_scheduled_job')
+    # python3 manage.py crontab add
 ]
