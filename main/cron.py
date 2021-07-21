@@ -9,7 +9,7 @@ def my_scheduled_job():
     # data.AQI = 2
     # data.save()
     ml.fun(ml.df)
-    sc.scrap()
+    # sc.scrap()
     
 
     # ml.f_s(ml.df)

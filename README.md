@@ -33,5 +33,5 @@ Visualization using Seaborn/Matplotlib
 1. [Tanishka Gaur](https://github.com/tanishkaa31/)
 2. [Vedant Chourasia](https://github.com/Vc8006/)
 3. [Shriya Dixit](https://github.com/shriyaD13/)
-4. [Pranjali Verma](https://github.com/pranjali1909/)
+4. [Pranjali Jadkar](https://github.com/pranjali1909/)
 5. [Shrish Kumar Singhal](https://github.com/shrishsinghal/)
