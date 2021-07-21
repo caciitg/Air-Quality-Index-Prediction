@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf_token" content="{{ csrf_token }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI</title>
+    <!-- CSS only -->
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        @media only screen and (max-width: 1067px) {
+  
+    /* background-color: lightblue; */
+    .main_class{
+        flex-direction: column;
+    }
+    .c1{
+        height: 100px !important;
+        width: 100% !important;
+    }
+  
+}
+
+        /* .container{
+            background-color: black;
+            display: grid;
+            grid-template-rows:200px 200px ;
+            grid-template-columns: 200px 200px;
+        } */
+
+        .flex-container {
+          display: flex;
+          flex-direction: column;
+          margin: 5px auto;
+          /* background-color: DodgerBlue; */
+          /* height: 400px;     */
+        }
+        
+        .flex-container > div {
+          background-color: #f1f1f1;
+          width: 100%;
+          margin: 5px;
+          text-align: center;
+          /* height: 25%; */
+          /* line-height: 75px; */
+          /* font-size: 30px; */
+        }
+
+        .p{
+            border: 1px solid black;
+            
+            text-align: center;
+            padding-top: 1%;
+            padding-bottom: 1%;
+            /* margin-top: 1%; */
+            
+        }
+        .p th{
+            border: 1px solid black;
+            
+            padding-top: 1%;
+            padding-bottom: 1%;
+            
+            text-align: center;
+            font-size: 1rem;
+            /* font-size: medium; */
+        }
+        .p td{
+            border: 1px solid black;
+          
+            padding-top: 1%;
+            padding-bottom: 1%;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+    </style>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+
+<body>
+    
+
+    <nav class="navbar navbar-light bg-dark">
+        <div class="container-fluid">
+            <div class="head" style=" height: 20%;text-align: center; color: white;" > <h1>AQI Prediction For Delhi </h1></div>
+
+            <form action="/" method="POST" id="post-form">
+                {% csrf_token %}
+        
+                <!-- <label for="date"> select date : </label> -->
+                <div class="d-flex">
+                    
+                <input type="date" step="0.1" class="form-control"  id="myDate" min="2015-01-01" max="2017-01-01" name="date" placeholder="" required>
+                <script>
+
+                    document.getElementById("myDate").max = {{max|safe}};
+                  
+                  </script>
+                <button type="submit" value="Submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="margin-left: 2%;">Submit</button>
+            </div>
+        </form>
+        </div>
+      </nav>
+
+      <!-- <span style="float: right;">
+        get predictions upto {{max}}
+    </span> -->
+
+      
+      
+      
+      <div class="d-flex bd-highlight main_class" style="height: 90vh;">
+        
+        
+        
+        <div class="col-md-5" style=" height: 100%;display: flex;flex-direction: column;margin-top: 4%;">
+          <div style="align-self: center;">
+            {{d}}
+          </div> 
+                
+
+      <div class="pie col-md-12" style="margin-top: 0;" >
+                    
+        <canvas id="myChart" width="100vw" height="25%" style="margin-top: 0;padding-top: 0;background-color: white;"></canvas>
+    </div>
+
+                <div>
+                <table style="width:100%;border: 2px solid black">
+                    <tr class="p">
+                      <th >Pollutant</th>
+                      <th>Side effects</th>
+                      <th style="font-size: small;">Value</th>
+                    </tr>
+                    <!-- <tr class="p">
+                      <td>AQI
+                        </td>
+                      <td>Health effects can be immediately felt by sensitive groups. Healthy individuals may experience difficulty breathing and throat irritation with prolonged exposure.</td>
+                      <td>{{ans}}</td>
+                    </tr> -->
+                    
+                    <tr class="p">
+                      <td>PM 10</td>
+                      <td>Fine Particulate Matter are inhalable pollutant particles with a diameter less than 2.5 micrometers that can enter the lungs and bloodstream, resulting in serious health issues.</td>
+                      <td>{{ans5}} µg/m³</td>
+                    </tr>
+                    
+                    <tr class="p">
+                      <td>SO2</td>
+                      <td>Exposure to Sulfur Dioxide can lead to throat and eye irritation and aggravate asthma as well as chronic bronchitis.</td>
+                      <td>{{ans2}} µg/m³</td>
+                    </tr>
+                    
+                    <tr class="p">
+                      <td>NO2</td>
+                      <td>Breathing in high levels of Nitrogen Dioxide increases the risk of respiratory problems. Coughing and difficulty breathing are common and more serious health issues such as respiratory infections can occur with longer exposure.</td>
+                      <td>{{ans3}} µg/m³</td>
+                    </tr>
+                    
+                    <tr class="p">
+                      <td>O3</td>
+                      <td>Ozone can damage the lungs. Relatively low amounts of ozone can cause chest pain, coughing, shortness of breath and, throat irritation. </td>
+                      <td>{{ans4}} µg/m³</td>
+                    </tr>
+                    
+                  </table> 
+                </div>
+        
+    
+    </div>
+           
+            <div class="col-md-7" style="padding: 1%;margin-top: 3%;">
+                
+                <div class="flex-container" style="margin: 0%;">
+                    
+             
+                <div class="canvas" style="flex: 1;"><canvas class="c1" id="myChart1" height="15%" width="100%" style="background-color: white;"></canvas></div>
+                <div class="canvas" style="flex: 1;"><canvas class="c1" id="myChart2" height="15%" width="100%" style="background-color: white;"></canvas></div>
+                <div class="canvas" style="flex: 1;"><canvas class="c1" id="myChart3" height="15%" width="100%" style="background-color: white;"></canvas></div>
+                <div class="canvas" style="flex: 1;"><canvas class="c1" id="myChart4" height="15%" width="100%" style="background-color: white;"></canvas></div>
+            </div>
+        </div>
+
+    
+        </div>
+
+        
+</body>
+
+<script>
+ Chart.defaults.doughnutLabels = Chart.helpers.clone(Chart.defaults.doughnut);
+
+var helpers = Chart.helpers;
+var defaults = Chart.defaults;
+
+Chart.controllers.doughnutLabels = Chart.controllers.doughnut.extend({
+	updateElement: function(arc, index, reset) {
+    var _this = this;
+    var chart = _this.chart,
+        chartArea = chart.chartArea,
+        opts = chart.options,
+        animationOpts = opts.animation,
+        arcOpts = opts.elements.arc,
+        centerX = (chartArea.left + chartArea.right) / 2,
+        centerY = (chartArea.top + chartArea.bottom) / 2,
+        startAngle = opts.rotation, // non reset case handled later
+        endAngle = opts.rotation, // non reset case handled later
+        dataset = _this.getDataset(),
+        circumference = reset && animationOpts.animateRotate ? 0 : arc.hidden ? 0 : _this.calculateCircumference(dataset.data[index]) * (opts.circumference / (2.0 * Math.PI)),
+        innerRadius = reset && animationOpts.animateScale ? 0 : _this.innerRadius,
+        outerRadius = reset && animationOpts.animateScale ? 0 : _this.outerRadius,
+        custom = arc.custom || {},
+        valueAtIndexOrDefault = helpers.getValueAtIndexOrDefault;
+
+    helpers.extend(arc, {
+      // Utility
+      _datasetIndex: _this.index,
+      _index: index,
+
+      // Desired view properties
+      _model: {
+        x: centerX + chart.offsetX,
+        y: centerY + chart.offsetY,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        circumference: circumference,
+        outerRadius: outerRadius,
+        innerRadius: innerRadius,
+        label: valueAtIndexOrDefault(dataset.label, index, chart.data.labels[index])
+      },
+
+      draw: function () {
+      	var ctx = this._chart.ctx,
+						vm = this._view,
+						sA = vm.startAngle,
+						eA = vm.endAngle,
+						opts = this._chart.config.options;
+				
+					var labelPos = this.tooltipPosition();
+					var segmentLabel = vm.circumference / opts.circumference * 100;
+					
+					ctx.beginPath();
+					
+					ctx.arc(vm.x, vm.y, vm.outerRadius, sA, eA);
+					ctx.arc(vm.x, vm.y, vm.innerRadius, eA, sA, true);
+					
+					ctx.closePath();
+					ctx.strokeStyle = vm.borderColor;
+					ctx.lineWidth = vm.borderWidth;
+					
+					ctx.fillStyle = vm.backgroundColor;
+					
+					ctx.fill();
+					ctx.lineJoin = 'bevel';
+					
+					if (vm.borderWidth) {
+						ctx.stroke();
+					}
+					
+					if (vm.circumference > 0.0015) { // Trying to hide label when it doesn't fit in segment
+						ctx.beginPath();
+						ctx.font = helpers.fontString(opts.defaultFontSize, opts.defaultFontStyle, opts.defaultFontFamily);
+						ctx.fillStyle = "#190707";
+						ctx.textBaseline = "top";
+						ctx.textAlign = "center";
+            
+            // Round percentage in a way that it always adds up to 100%
+						// ctx.fillText(segmentLabel.toFixed(2) + "%", labelPos.x, labelPos.y);
+					
+
+          }
+          var num = {{ans|safe}}
+          num_n = parseFloat(num).toFixed(2) 
+        //   var xtext = `Total = ${num}`
+          //display in the center the total sum of all segments
+          ctx.fillText('AQI = '+ num_n, vm.x, vm.y-20, 50);
+      }
+    });
+
+    var model = arc._model;
+    model.backgroundColor = custom.backgroundColor ? custom.backgroundColor : valueAtIndexOrDefault(dataset.backgroundColor, index, arcOpts.backgroundColor);
+    model.hoverBackgroundColor = custom.hoverBackgroundColor ? custom.hoverBackgroundColor : valueAtIndexOrDefault(dataset.hoverBackgroundColor, index, arcOpts.hoverBackgroundColor);
+    model.borderWidth = custom.borderWidth ? custom.borderWidth : valueAtIndexOrDefault(dataset.borderWidth, index, arcOpts.borderWidth);
+    model.borderColor = custom.borderColor ? custom.borderColor : valueAtIndexOrDefault(dataset.borderColor, index, arcOpts.borderColor);
+
+    // Set correct angles if not resetting
+    if (!reset || !animationOpts.animateRotate) {
+      if (index === 0) {
+        model.startAngle = opts.rotation;
+      } else {
+        model.startAngle = _this.getMeta().data[index - 1]._model.endAngle;
+      }
+
+      model.endAngle = model.startAngle + model.circumference;
+    }
+
+    arc.pivot();
+  }
+});
+
+var config = {
+  type: 'doughnutLabels',
+  data: {
+    datasets: [{
+      data: [
+        100,100,100
+      ],
+      backgroundColor: [
+        "rgb(0,255,0)",
+        "rgb(255,255,0)",
+        "rgb(255,0,0)",
+        // "#949FB1",
+        // "#4D5360",
+      ],
+      label: 'Dataset 1'
+    }]
+  },
+  options: {
+			circumference: Math.PI,
+			rotation: 1.0 * Math.PI,
+			responsive: true,
+			legend: { position: 'top',},
+			// title: { display: true, text: 'Graphics' },
+			animation: { animateScale: true, animateRotate: true }
+		}
+};
+
+var ctx = document.getElementById("myChart").getContext("2d");
+new Chart(ctx, config);
+
+
+    var ctx = document.getElementById('myChart1').getContext('2d');
+
+
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:{{d2|safe}},
+            datasets: [{
+                label: 'AQI',
+                data: {{d1|safe}},
+                backgroundColor: 'rgba(255, 99, 132, 1)',
+                borderColor: 'rgba(51, 51, 0,0.2)',
+                borderWidth: 1,
+                // fill : false ,
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes : [{
+                    ticks: {
+                display: false //this will remove only the label
+            }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    var ctx = document.getElementById('myChart2').getContext('2d');
+
+
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:{{d2|safe}},
+            datasets: [{
+                label: 'SO2',
+                data: {{d3|safe}},  
+                backgroundColor: 'rgba(255, 255, 26, 1)',
+                borderColor: 'rgba(51, 51, 0, 0.2)',
+                borderWidth: 1,
+                // fill : false,
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes : [{
+                    ticks: {
+                display: false //this will remove only the label
+            }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    var ctx = document.getElementById('myChart3').getContext('2d');
+
+
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:{{d2|safe}},
+            datasets: [{
+                label: 'NO2',
+                data: {{d4|safe}},
+                backgroundColor: 'rgba(255, 0, 0, 1)',
+                borderColor: 'rgba(51, 51, 0, 0.2)',
+                borderWidth: 1,
+                // fill : false,
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes : [{
+                    ticks: {
+                display: false //this will remove only the label
+            }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    var ctx = document.getElementById('myChart4').getContext('2d');
+
+
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:{{d2|safe}},
+            datasets: [{
+                label: 'CO',
+                data: {{d5|safe}},
+                backgroundColor: 'rgba(102, 204, 0, 1)',
+                borderColor: 'rgba(51, 51, 0, 0.2)',
+                borderWidth: 1,
+                // fill : false,
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes : [{
+                    ticks: {
+                display: false //this will remove only the label
+            }
+                }]
+            }
+        }
+    });
+</script>
+
+</html>
+

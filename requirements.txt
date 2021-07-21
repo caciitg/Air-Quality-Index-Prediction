@@ -1,0 +1,17 @@
+amqp==2.6.1
+click==7.1.2
+cycler==0.10.0
+defusedxml==0.7.1
+diff-match-patch==20200713
+Django==3.1.7
+django-crontab==0.7.1
+django-import-export==2.5.0
+joblib==1.0.1
+matplotlib==3.3.4
+numpy==1.20.1
+pandas==1.2.3
+scikit-learn==0.24.1
+scipy==1.6.1
+sklearn==0.0
+statsmodels==0.12.2
+
